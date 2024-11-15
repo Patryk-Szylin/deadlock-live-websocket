@@ -1,0 +1,6 @@
+@deadlock_demo_websockets_HostAddress = http://localhost:5238
+
+GET {{deadlock_demo_websockets_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
