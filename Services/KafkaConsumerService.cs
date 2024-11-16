@@ -31,7 +31,6 @@ public class KafkaConsumerService
                 var result = _consumer.Consume();
                 onMessageReceived?.Invoke(result.Message.Value);
             }
-        });
+        }, default);
     }
-
 }

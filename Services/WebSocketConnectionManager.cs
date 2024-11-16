@@ -6,12 +6,7 @@ using System.Text.Json;
 public class WebSocketConnectionManager
 {
     private readonly ConcurrentDictionary<string, List<WebSocket>> _connections = new();
-    private readonly KafkaConsumerService _kafkaConsumer;
 
-    public WebSocketConnectionManager(KafkaConsumerService kafkaConsumer)
-    {
-        _kafkaConsumer = kafkaConsumer;
-    }
     public void AddConnection(string matchId, WebSocket socket)
     {
         if (!_connections.ContainsKey(matchId))
@@ -37,8 +32,6 @@ public class WebSocketConnectionManager
 
     public async Task BroadcastMessageAsync(string matchId, string message)
     {
-        // Extract matchId from topic name
-
         if (_connections.TryGetValue(matchId, out var sockets))
         {
             var tasks = sockets
@@ -69,7 +62,6 @@ public class WebSocketConnectionManager
 
         AddConnection(matchId, socket);
         
-        // Subscribe to Kafka topic
         await kafkaConsumer.SubscribeToMatchAsync(matchId, async message =>
         {
             await BroadcastMessageAsync(matchId, message);
